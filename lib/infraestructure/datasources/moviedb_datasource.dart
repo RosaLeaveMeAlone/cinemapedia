@@ -30,16 +30,33 @@ class MoviedbDatasource extends MoviesDatasource {
     }
     );
     final movieDBResponde = MovieDbResponse.fromJson(response.data);
+    final List<Movie> filteredMovies = [];
     
     final List<Movie> movies = movieDBResponde.results
-    .where((movieDb) => movieDb.posterPath != 'no-poster')
+    //! La linea de abajo por algun motivo no estaba filtrando, investigar porque no funciona
+    // .where((movieDb) => movieDb.posterPath != 'no-poster')
     .map(
       (moviedb) => MovieMapper.movieDBToEntity(moviedb)
       ).toList();
 
 
+    for (Movie movie in movies) {
+      if (movie.posterPath != 'no-poster' && _isValidUrl(movie.posterPath)) {
+        filteredMovies.add(movie);
+      }
+    }
 
-    return movies;
+
+    return filteredMovies;
+  }
+
+  bool _isValidUrl(String url) {
+    try {
+      Uri.parse(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
 }
