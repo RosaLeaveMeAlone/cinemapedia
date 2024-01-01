@@ -60,8 +60,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
         MovieHorizontalListview(
           movies: nowPlayingMovies,
-          label: 'Now Playing',
-          sublabel: 'Popular movies',
+          label: 'En cines',
+          sublabel: 'Hoy',
           )
       ],
     );
