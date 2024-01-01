@@ -53,17 +53,60 @@ class _HomeViewState extends ConsumerState<_HomeView> {
       );
     }
 
-    return Column(
-      children: [
-        const CustomAppbar(),
-        MoviesSlideshow(movies: slideShowMovies),
+    return CustomScrollView(
 
-        MovieHorizontalListview(
-          movies: nowPlayingMovies,
-          label: 'En cines',
-          sublabel: 'Hoy',
-          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+      slivers: [
+
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.all(0),
+            title: CustomAppbar(),
           )
+        ),
+
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return Column(
+                      children: [
+                        // const CustomAppbar(),
+                        MoviesSlideshow(movies: slideShowMovies),
+                    
+                        MovieHorizontalListview(
+                          movies: nowPlayingMovies,
+                          label: 'En cines',
+                          sublabel: 'Hoy',
+                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          ),
+                        MovieHorizontalListview(
+                          movies: nowPlayingMovies,
+                          label: 'Proximamente',
+                          sublabel: 'En este mes',
+                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          ),
+                        MovieHorizontalListview(
+                          movies: nowPlayingMovies,
+                          label: 'Populares',
+                          // sublabel: 'En este mes',
+                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          ),
+                        MovieHorizontalListview(
+                          movies: nowPlayingMovies,
+                          label: 'Mejor Calificadas',
+                          sublabel: 'Desde siempre',
+                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          ),
+                        SizedBox(height: 10,)
+                      ],
+                    );
+            },
+            childCount: 1
+          )
+        )
+
+
+
       ],
     );
   }
