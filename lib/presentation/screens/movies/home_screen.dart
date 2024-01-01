@@ -37,6 +37,9 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
 
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
 
 
   }
@@ -44,10 +47,13 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   Widget build(BuildContext context) {
 
-    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final slideShowMovies = ref.watch(moviesSlidesshowProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedMoviesProvider);
 
-    if(slideShowMovies.length == 0) {
+    if(slideShowMovies.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
@@ -80,24 +86,24 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                           loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
                           ),
                         MovieHorizontalListview(
-                          movies: nowPlayingMovies,
+                          movies: upcomingMovies,
                           label: 'Proximamente',
                           sublabel: 'En este mes',
-                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          loadNextPage: () => ref.read(upcomingMoviesProvider.notifier).loadNextPage(),
                           ),
                         MovieHorizontalListview(
-                          movies: nowPlayingMovies,
+                          movies: popularMovies,
                           label: 'Populares',
                           // sublabel: 'En este mes',
-                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          loadNextPage: () => ref.read(popularMoviesProvider.notifier).loadNextPage(),
                           ),
                         MovieHorizontalListview(
-                          movies: nowPlayingMovies,
+                          movies: topRatedMovies,
                           label: 'Mejor Calificadas',
                           sublabel: 'Desde siempre',
-                          loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                          loadNextPage: () => ref.read(topRatedMoviesProvider.notifier).loadNextPage(),
                           ),
-                        SizedBox(height: 10,)
+                        const SizedBox(height: 10,)
                       ],
                     );
             },
