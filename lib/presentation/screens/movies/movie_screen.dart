@@ -5,15 +5,22 @@ class MovieScreen extends StatelessWidget {
 
   static const name = 'movie-screen';
 
-  final String modieId;
+  final String movieId;
 
   const MovieScreen({
     super.key, 
-    required this.modieId
+    required this.movieId
     });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Movie Screen $movieId'),
+      ),
+      body: Center(
+        child: Text('Movie Screen'),
+      ),
+    );
   }
 }
