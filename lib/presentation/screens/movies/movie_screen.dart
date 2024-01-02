@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/config/domain/entities/movie.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -158,8 +159,6 @@ class _ActorsByMovie extends ConsumerWidget {
       height: 300,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        // padding: EdgeInsets.only(bottom: 80),
-        // shrinkWrap: true,
         itemCount: actors.length,
         itemBuilder: (context, index) {
           final actor = actors[index];
@@ -170,14 +169,16 @@ class _ActorsByMovie extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    actor.profilePath,
-                    fit: BoxFit.cover,
-                    height: 180,
-                    width: 135,
-                    ),
+                FadeInRight(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actor.profilePath,
+                      fit: BoxFit.cover,
+                      height: 180,
+                      width: 135,
+                      ),
+                  ),
                 ),
                 const SizedBox(height: 10,),
                 Text(actor.name,maxLines: 2, textAlign: TextAlign.center,),
@@ -220,6 +221,10 @@ class _CustomSliverAppbar extends StatelessWidget {
               child: Image.network(
                 movie.posterPath,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if(loadingProgress != null) return const SizedBox();
+                  return FadeIn(child: child);
+                }
                 ),
             ),
             const SizedBox.expand(
