@@ -39,19 +39,90 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     final Movie? movie = ref.watch(movieInfoProvider)[widget.movieId];
 
     if(movie == null) {
-      return Scaffold(
-        body: const Center(
+      return const Scaffold(
+        body: Center(
           child: CircularProgressIndicator(strokeWidth: 2,),
         ),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Movie Screen ${widget.movieId}'),
+      body: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
+        slivers: [
+          _CustomSliverAppbar(movie: movie)
+        ],
       ),
-      body: Center(
-        child: Text('Movie Screen'),
+    );
+  }
+}
+
+// ignore: unused_element
+class _CustomSliverAppbar extends StatelessWidget {
+
+  final Movie movie;
+
+
+  const _CustomSliverAppbar({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+
+    return SliverAppBar(
+      backgroundColor: Colors.black,
+      expandedHeight: size.height * 0.7,
+      // title: Text(movie.title),
+      
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          children: [
+            SizedBox.expand(
+              child: Image.network(
+                movie.posterPath,
+                fit: BoxFit.cover,
+                ),
+            ),
+            const SizedBox.expand(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.7, 1.0],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black87
+                    ]
+                    )
+                )),
+            ),
+            const SizedBox.expand(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    stops: [0.0, 0.3],
+                    colors: [
+                      Colors.white70,
+                      Colors.transparent,
+                    ]
+                    )
+                )),
+            ),
+          ],
+        ),
+        titlePadding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+        title: Text(
+            movie.title,
+            style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+
+          textAlign: TextAlign.start,
+        ),
       ),
     );
   }
