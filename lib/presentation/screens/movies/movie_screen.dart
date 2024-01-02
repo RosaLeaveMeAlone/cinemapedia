@@ -125,9 +125,72 @@ class _MovieDetails extends StatelessWidget {
               ],
             ),
           ),
-
-          const SizedBox(height: 80,),
+          _ActorsByMovie(movieId: movie.id.toString()),
+          const SizedBox(height: 60,),
       ],
+    );
+  }
+}
+
+
+class _ActorsByMovie extends ConsumerWidget {
+
+  final String movieId;
+
+  const _ActorsByMovie({
+    required this.movieId
+  });
+
+  @override
+  Widget build(BuildContext context, ref) {
+
+    final actorsByMovie = ref.watch(actorsByMovieProvider);
+
+    if(actorsByMovie[movieId] == null) {
+      return const Center(
+        child: CircularProgressIndicator(strokeWidth: 2,),
+      );
+    }
+
+    final actors = actorsByMovie[movieId]!;
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        // padding: EdgeInsets.only(bottom: 80),
+        // shrinkWrap: true,
+        itemCount: actors.length,
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+
+          return Container(
+            padding: const EdgeInsets.all(8.0),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    actor.profilePath,
+                    fit: BoxFit.cover,
+                    height: 180,
+                    width: 135,
+                    ),
+                ),
+                const SizedBox(height: 10,),
+                Text(actor.name,maxLines: 2, textAlign: TextAlign.center,),
+                Text(actor.character ?? '',
+                  maxLines: 2,
+                  style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis), 
+                  textAlign: TextAlign.center,
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -188,16 +251,16 @@ class _CustomSliverAppbar extends StatelessWidget {
             ),
           ],
         ),
-        titlePadding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-        title: Text(
-            movie.title,
-            style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
+        // titlePadding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+        // title: Text(
+        //     movie.title,
+        //     style: TextStyle(
+        //     color: Colors.white,
+        //     fontSize: 20,
+        //   ),
 
-          textAlign: TextAlign.start,
-        ),
+        //   textAlign: TextAlign.start,
+        // ),
       ),
     );
   }
