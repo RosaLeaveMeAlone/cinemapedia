@@ -4,7 +4,7 @@ import 'package:cinemapedia/config/domain/entities/actor.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final actorsByMovie =
+final actorsByMovieProvider =
     StateNotifierProvider<ActorsByMovieNotifier,Map<String,List<Actor>>>((ref) {
   final actorsRepository = ref.watch(actorsRepositoryProvider);
 
