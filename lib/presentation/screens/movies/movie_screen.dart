@@ -72,8 +72,6 @@ class _MovieDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final colors = Theme.of(context).colorScheme;
-
     final size = MediaQuery.of(context).size;
     final textStyles = Theme.of(context).textTheme;
 
