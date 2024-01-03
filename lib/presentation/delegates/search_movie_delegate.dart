@@ -3,6 +3,7 @@
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/config/domain/entities/movie.dart';
+import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:flutter/material.dart';
 
 typedef SearchMoviesCallback = Future<List<Movie>> Function(String query);
@@ -112,6 +113,17 @@ class _MovieItem extends StatelessWidget {
                 (movie.overview.length < 100)
                 ? Text(movie.overview, style: textStyle.bodyMedium)
                 : Text('${movie.overview.substring(0, 100)}...', style: textStyle.bodyMedium),
+                Row(
+                  children: [
+                    Icon(Icons.star_half_outlined, color: Colors.yellow.shade800),
+                    SizedBox(width: 5),
+                    Text(
+                      HumanFormats.number(movie.voteAverage, 1), 
+                      style: textStyle.bodySmall!.copyWith(color: Colors.yellow.shade900)
+                    ),
+                  ],
+                )
+
               ],
             ),
           )
