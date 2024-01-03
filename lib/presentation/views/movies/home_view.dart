@@ -5,16 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 
-class _HomeView extends ConsumerStatefulWidget {
-  const _HomeView({
+class HomeView extends ConsumerStatefulWidget {
+  const HomeView({
     super.key,
   });
 
   @override
-  _HomeViewState createState() => _HomeViewState();
+  HomeViewState createState() => HomeViewState();
 }
 
-class _HomeViewState extends ConsumerState<_HomeView> {
+class HomeViewState extends ConsumerState<HomeView> {
 
 
   @override
