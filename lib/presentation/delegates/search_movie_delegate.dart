@@ -15,17 +15,30 @@ typedef SearchMoviesCallback = Future<List<Movie>> Function(String query);
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   final SearchMoviesCallback searchMovies;
-  StreamController debouceMovies = StreamController<List<Movie>>.broadcast();
+  StreamController deboucedMovies = StreamController<List<Movie>>.broadcast();
   Timer? _debounceTimer;
 
   SearchMovieDelegate({required this.searchMovies});
+
+  void clearStreams() {
+    deboucedMovies.close();
+  }
 
   void _onQueryChanged(String query) async {
     if( _debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
     
 
-    _debounceTimer = Timer(const Duration(milliseconds: 500), ()  {
-      print('Query: $query'); //* Peticion HTTP y emitir al Stream
+    _debounceTimer = Timer(const Duration(milliseconds: 450), () async {
+      if(query.isEmpty) {
+        deboucedMovies.add(<Movie>[]);
+        return;
+      }
+
+      final movies = await searchMovies(query);
+
+      deboucedMovies.add(movies);
+
+
     });
 
   }
@@ -52,6 +65,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     
 
     return IconButton(onPressed: (){
+      clearStreams();
       close(context, null);
     }, icon: const Icon(Icons.arrow_back));
   }
@@ -70,7 +84,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     _onQueryChanged(query);
 
     return StreamBuilder(
-      stream: debouceMovies.stream, 
+      stream: deboucedMovies.stream, 
       builder: (context, snapshot) {
 
         final movies = snapshot.data ?? [];
@@ -80,7 +94,11 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
           itemCount: movies.length,
           itemBuilder: (context, index) => _MovieItem(
             movie: movies[index],
-            onMovieSelected: close,),
+            onMovieSelected: (context, movie) {
+                clearStreams();
+                close(context,movie);
+              }
+            ),
         );
       },
       );
