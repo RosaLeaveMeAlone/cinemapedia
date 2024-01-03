@@ -15,7 +15,7 @@ typedef SearchMoviesCallback = Future<List<Movie>> Function(String query);
 class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   final SearchMoviesCallback searchMovies;
-  final List<Movie> initialMovies;
+  List<Movie> initialMovies;
 
   StreamController deboucedMovies = StreamController<List<Movie>>.broadcast();
   Timer? _debounceTimer;
@@ -43,9 +43,32 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
       deboucedMovies.add(movies);
 
+      initialMovies = movies;
 
     });
 
+  }
+
+  Widget buildResultsAndSuggestions() {
+    return StreamBuilder(
+      initialData: initialMovies,
+      stream: deboucedMovies.stream, 
+      builder: (context, snapshot) {
+
+        final movies = snapshot.data ?? [];
+
+        return ListView.builder(
+          itemCount: movies.length,
+          itemBuilder: (context, index) => _MovieItem(
+            movie: movies[index],
+            onMovieSelected: (context, movie) {
+                clearStreams();
+                close(context,movie);
+              }
+            ),
+        );
+      },
+    );
   }
 
   @override
@@ -79,7 +102,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   Widget buildResults(BuildContext context) {
     
 
-    return const Text('Build Results');
+    return buildResultsAndSuggestions();
 
   }
 
@@ -88,26 +111,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     
     _onQueryChanged(query);
 
-    return StreamBuilder(
-      initialData: initialMovies,
-      stream: deboucedMovies.stream, 
-      builder: (context, snapshot) {
-
-        final movies = snapshot.data ?? [];
-
-
-        return ListView.builder(
-          itemCount: movies.length,
-          itemBuilder: (context, index) => _MovieItem(
-            movie: movies[index],
-            onMovieSelected: (context, movie) {
-                clearStreams();
-                close(context,movie);
-              }
-            ),
-        );
-      },
-      );
+    return buildResultsAndSuggestions();
   }
 
 }
