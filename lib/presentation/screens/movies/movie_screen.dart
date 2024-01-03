@@ -197,7 +197,7 @@ class _ActorsByMovie extends ConsumerWidget {
 }
 
 
-class _CustomSliverAppbar extends StatelessWidget {
+class _CustomSliverAppbar extends ConsumerWidget {
 
   final Movie movie;
 
@@ -205,7 +205,7 @@ class _CustomSliverAppbar extends StatelessWidget {
   const _CustomSliverAppbar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
     final size = MediaQuery.of(context).size;
 
@@ -216,7 +216,7 @@ class _CustomSliverAppbar extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-            //TODO: Toggle
+            ref.watch(localStorageRepositoryProvider).toggleFavorite(movie);
           }, 
           icon: const Icon(Icons.favorite_border_outlined),
           // icon: const Icon(Icons.favorite_rounded, color: Colors.red,),
