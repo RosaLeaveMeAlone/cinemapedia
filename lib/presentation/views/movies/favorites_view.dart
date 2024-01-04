@@ -7,19 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FavoritesView extends ConsumerStatefulWidget {
   const FavoritesView({super.key});
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: ListView.builder(
-  //       itemBuilder: (context, index) {
-  //         return ListTile(
-  //           title: Text('Movie $index'),
-  //         );
-  //       }
-  //       ),
-  //   );
-  // }
   
   @override
   FavoritesViewState createState() => FavoritesViewState();
@@ -27,11 +14,32 @@ class FavoritesView extends ConsumerStatefulWidget {
 
 class FavoritesViewState extends ConsumerState<FavoritesView> {
 
+  bool isLastPage = false;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    ref.read(favoriteMoviesProvider.notifier).loadNextPage();
+    loadNextPage();
   }
+
+
+  void loadNextPage() async {
+
+    if(isLoading || isLastPage) return;
+
+    isLoading = true;
+
+    final movies = await ref.read(favoriteMoviesProvider.notifier).loadNextPage();
+
+    isLoading = false;
+
+    if(movies.isEmpty) {
+      isLastPage = true;
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +50,10 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
     final List<Movie> favoriteList = favorites.values.toList();
 
     return Scaffold(
-      body: MovieMasonry(movies: favoriteList,)
+      body: MovieMasonry(
+        loadNextPage: loadNextPage,
+        movies: favoriteList,
+        )
     );
   }
 
